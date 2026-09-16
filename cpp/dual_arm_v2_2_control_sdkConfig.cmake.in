@@ -2,11 +2,8 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
+find_dependency(yaml-cpp)
 
 include("${CMAKE_CURRENT_LIST_DIR}/dual_arm_v2_2_control_sdkTargets.cmake")
-
-if(NOT TARGET dual_arm_v2_2_control_sdk::dual_arm_v2_2_control_sdk)
-    message(FATAL_ERROR "dual_arm_v2_2_control_sdkTargets.cmake did not define dual_arm_v2_2_control_sdk::dual_arm_v2_2_control_sdk")
-endif()
 
 check_required_components(dual_arm_v2_2_control_sdk)
