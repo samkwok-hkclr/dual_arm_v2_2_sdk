@@ -1,8 +1,9 @@
 panel:
-  mainwindow_size: [1000, 900]
+  mainwindow_size: [1500, 950]
   enable_ndi: false
   dt_send: 0.011
-  dt_receive: 0.009 #Need to be faster than rt_control's sending frequency
+  dt_receive: 0.009 # Need to be faster than rt_control's sending frequency
+  # ip: 10.30.4.142
   ip: 127.0.0.1
   port: 11101
   general:
@@ -33,9 +34,11 @@ panel:
       view_center: [0, 0, 1.25]
 rt_control:
   dt_send: 0.01
-  dt_receive: 0.01 #Need to be faster than panel's sending frequency
+  dt_receive: 0.01 # Need to be faster than panel's sending frequency
+  # ip: 10.30.13.21
+  # ip: 10.30.3.96
   ip: 127.0.0.1
-  port: 11201
+  port: 11205
   robotics_library: pinocchio
   hardware_simulation: false
 curobo: {}
@@ -43,6 +46,7 @@ curobo: {}
   # import_yaml: curobo/no_gripper.yaml
   # import_yaml: curobo/left_hand_right_gripper.yaml
 robot:
-  import_yaml: share/config/assembly/no_gripper.yaml
   # import_yaml: share/config/assembly/with_gripper.yaml
+  import_yaml: share/config/assembly/no_gripper.yaml 
   # import_yaml: share/config/assembly/left_hand_right_gripper.yaml
+  # import_yaml: share/config/assembly/left_spark2_gripper_right_spark2_gripper.yaml

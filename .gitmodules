@@ -1,6 +1,6 @@
 [submodule "curi_udp"]
 	path = curi_udp
-	url = git@github.com:CURI-Simulation-and-Software-Group/curi_udp
+	url = https://github.com/CURI-Simulation-and-Software-Group/curi_udp
 [submodule "robot_platform_utils"]
 	path = robot_platform_utils
-	url = git@github.com:hkclr-manipulation-group/robot_platform_utils.git
+	url = https://github.com/hkclr-manipulation-group/robot_platform_utils.git

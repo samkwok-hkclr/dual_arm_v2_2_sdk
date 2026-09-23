@@ -1,9 +1,0 @@
-@PACKAGE_INIT@
-
-include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-find_dependency(yaml-cpp)
-
-include("${CMAKE_CURRENT_LIST_DIR}/dual_arm_v2_2_control_sdkTargets.cmake")
-
-check_required_components(dual_arm_v2_2_control_sdk)

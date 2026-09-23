@@ -8,6 +8,9 @@
 #include <cstring>
 #include <mutex>
 #include <thread>
+#include <fstream>
+#include <cerrno>
+#include <cstring>
 
 #include <yaml-cpp/yaml.h>
 
@@ -57,19 +60,138 @@ struct ControlApi::Impl {
     uint8_t previous_trajectory_mode = 255;
     bool previous_follow = false;
 
+    // explicit Impl(const std::string& prefix) {
+    //     config = loadYamlConfig(prefix + "/config.yaml");
+    //     initialize_command();
+
+    //     const auto panel = config["panel"];
+    //     const auto rt = config["rt_control"];
+    //     udp = std::make_unique<CuarmUdp<PlannerState, PanelCommand>>(
+    //         panel["ip"].as<std::string>(), panel["port"].as<int>(),
+    //         rt["ip"].as<std::string>(), rt["port"].as<int>(),
+    //         &CuarmMessageHandler::unpack_planner_state,
+    //         &CuarmMessageHandler::pack_panel_command, kBufferSize);
+
+    //     receive_thread = std::thread(&Impl::receive_loop, this);
+    // }
+
     explicit Impl(const std::string& prefix) {
-        config = loadYamlConfig(prefix + "/config.yaml");
+        std::cerr << "[Impl] === begin construct Impl ===" << std::endl;
+
+        const std::string config_path = prefix + "/config.yaml";
+        std::cerr << "[Impl] loading config from: " << config_path << std::endl;
+
+        // 先做一次文件存在性/可读性检查，避免后续 YAML 报错信息不清
+        {
+            std::ifstream probe(config_path);
+            if (!probe.good()) {
+                std::cerr << "[Impl][FATAL] cannot open config file: " << config_path
+                        << " errno=" << errno << " (" << std::strerror(errno) << ")"
+                        << std::endl;
+                throw std::runtime_error("config file not readable: " + config_path);
+            }
+            std::cerr << "[Impl] config file is readable, size check..."
+                    << std::endl;
+        }
+
+        try {
+            config = loadYamlConfig(config_path);
+        } catch (const std::exception& e) {
+            std::cerr << "[Impl][FATAL] loadYamlConfig threw: " << e.what()
+                    << std::endl;
+            throw;
+        }
+
+        if (!config || config.IsNull()) {
+            std::cerr << "[Impl][FATAL] config is null after load" << std::endl;
+            throw std::runtime_error("config is null");
+        }
+        std::cerr << "[Impl] config loaded OK" << std::endl;
+
+        if (config["robot"]) {
+            // std::cerr << "[Impl] === robot node dump begin ===\n"
+            //         << YAML::Dump(config["robot"])
+            //         << "\n[Impl] === robot node dump end ===" << std::endl;
+            std::cerr << "[Impl] config['robot'] is okay" << std::endl;
+        } else {
+            std::cerr << "[Impl][FATAL] config['robot'] is missing" << std::endl;
+        }
+
         initialize_command();
+        std::cerr << "[Impl] initialize_command() done" << std::endl;
 
-        const auto panel = config["panel"];
-        const auto rt = config["rt_control"];
+        auto require = [&](const char* name) -> YAML::Node {
+            YAML::Node n = config[name];
+            if (!n || n.IsNull()) {
+                std::cerr << "[Impl][FATAL] missing top-level key: " << name
+                        << std::endl;
+                throw std::runtime_error(std::string("missing key: ") + name);
+            }
+            std::cerr << "[Impl] found top-level key: " << name << std::endl;
+            return n;
+        };
+
+        auto get_str = [&](const YAML::Node& parent, const char* key,
+                        const char* ctx) -> std::string {
+            const YAML::Node n = parent[key];           // 同样拷一份更安全
+            if (!n || n.IsNull()) {
+                std::cerr << "[Impl][FATAL] missing key '" << key << "' under "
+                        << ctx << std::endl;
+                throw std::runtime_error(std::string(ctx) + "." + key + " missing");
+            }
+            try {
+                std::string v = n.as<std::string>();
+                std::cerr << "[Impl] " << ctx << "." << key << " = " << v << std::endl;
+                return v;
+            } catch (const std::exception& e) {
+                std::cerr << "[Impl][FATAL] " << ctx << "." << key
+                        << " bad conversion: " << e.what() << std::endl;
+                throw;
+            }
+        };
+
+        auto get_int = [&](const YAML::Node& parent, const char* key,
+                        const char* ctx) -> int {
+            const YAML::Node n = parent[key];
+            if (!n || n.IsNull()) {
+                std::cerr << "[Impl][FATAL] missing key '" << key << "' under "
+                        << ctx << std::endl;
+                throw std::runtime_error(std::string(ctx) + "." + key + " missing");
+            }
+            try {
+                int v = n.as<int>();
+                std::cerr << "[Impl] " << ctx << "." << key << " = " << v << std::endl;
+                return v;
+            } catch (const std::exception& e) {
+                std::cerr << "[Impl][FATAL] " << ctx << "." << key
+                        << " bad conversion: " << e.what() << std::endl;
+                throw;
+            }
+        };
+
+        const YAML::Node panel = require("panel");
+        const YAML::Node rt    = require("rt_control");
+
+        const std::string panel_ip = get_str(panel, "ip", "panel");
+        const int         panel_port = get_int(panel, "port", "panel");
+        const std::string rt_ip    = get_str(rt, "ip", "rt_control");
+        const int         rt_port  = get_int(rt, "port", "rt_control");
+
+        std::cerr << "[Impl] creating CuarmUdp ..." << std::endl;
         udp = std::make_unique<CuarmUdp<PlannerState, PanelCommand>>(
-            panel["ip"].as<std::string>(), panel["port"].as<int>(),
-            rt["ip"].as<std::string>(), rt["port"].as<int>(),
+            panel_ip, panel_port,
+            rt_ip,    rt_port,
             &CuarmMessageHandler::unpack_planner_state,
-            &CuarmMessageHandler::pack_panel_command, kBufferSize);
+            &CuarmMessageHandler::pack_panel_command,
+            kBufferSize);
+        std::cerr << "[Impl] CuarmUdp created OK" << std::endl;
 
+        std::cerr << "[Impl] rt_control endpoint: " << rt_ip << ":" << rt_port
+                << std::endl;
+
+        std::cerr << "[Impl] starting receive thread ..." << std::endl;
         receive_thread = std::thread(&Impl::receive_loop, this);
+        std::cerr << "[Impl] === Impl construct finished ===" << std::endl;
     }
 
     ~Impl() {
@@ -132,6 +254,7 @@ struct ControlApi::Impl {
     }
 
     void receive_loop() {
+        fprintf(stderr, "[recv] thread started, shutdown=%d\n", (int)shutdown.load());
         while (!shutdown.load()) {
             PlannerState incoming{};
             if (udp->receive(&incoming, 10000)) {
@@ -143,6 +266,7 @@ struct ControlApi::Impl {
                 state_generation.fetch_add(1);
             }
         }
+        fprintf(stderr, "[recv] loop exit, shutdown=%d\n", (int)shutdown.load());
     }
 
     std::vector<int> group_indices(Group group) const {
