@@ -1,6 +1,6 @@
 base:
   urdf_joints: []
-  urdf_links: ["dummy_world", "DP", "s1", "s2", "s3", "s4"] 
+  urdf_links: ["dummy_world", "S0", "S1", "S2", "S3", "S4"]
 arm:
   - name: armL
     type: DualV2Arm
@@ -17,12 +17,12 @@ arm:
       vel_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     safety: 
       joint_soft_limit:                                 # Saturate cmd on reach
-        position:     [[-360.0, -60.0, -360.0, -40.0, -360.0, -70.0, -70.0], [360.0, 90.0, 360.0, 145.0, 360.0, 70.0, 70.0]]
+        position:     [[-180.0, -86.0, -180.0, -50.0, -180.0, -90.0, -180.0], [180.0, 86.0, 180.0, 140.0, 180.0, 90.0, 180.0]]
         velocity:     [100, 100, 100, 150, 150, 150, 150]
         acceleration: [100, 100, 100, 150, 150, 150, 150]
         torque:       [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
       joint_hard_limit:                                 # Program terminates if exceed
-        position: [[-365.0, -65.0, -365.0, -45.0, -365.0, -75.0, -75.0], [365.0, 95.0, 365.0, 150.0, 365.0, 75.0, 75.0]]
+        position: [[-180.0, -86.0, -180.0, -50.0, -180.0, -90.0, -180.0], [180.0, 86.0, 180.0, 140.0, 180.0, 90.0, 180.0]]
         velocity: [130, 130, 130, 180, 180, 180, 180]
         torque:   [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
       joint_follow:                                     # Program terminates if exceed
@@ -32,14 +32,14 @@ arm:
       joint_jump:                                       # Saturate cmd on reach, (= joint_soft_limit)
         position: [100, 100, 100, 150, 150, 150, 150]
         velocity: [100, 100, 100, 150, 150, 150, 150]
-        torque:   [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+        torque:   [12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0]
       task_motion_limit:
         linear_velocity:  [0.2, 0.2, 0.2]               # in m/s, x, y, z
         angular_velocity: [20, 20, 20]                  # in deg/s 
     force_control:
       gravity:
-        ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        kd: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        ratio: [0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1]
+        kd: [0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02]
       joint_impedance: #Activate when torque control reach joint limit
         kp: [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
         kd: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
@@ -107,38 +107,38 @@ arm:
     urdf_links: ["arm_L1_r", "arm_L2_r", "arm_L3_r", "arm_L4_r", "arm_L5_r", "arm_L6_r", "arm_L7_r", "arm_end_effector_r"]
     enable_joint: [true, true, true, true, true, true, true]
     pid:
-      pos_vel_kp: [3.0, 3.0, 10.0, 3.0, 3.0, 3.0, 3.0]
+      pos_vel_kp: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0]
       pos_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       vel_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       pos_vel_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       pos_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       vel_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     safety: 
-      joint_soft_limit:                                 # Saturate cmd on reach
-        position:     [[-360.0, -60.0, -360.0, -40.0, -360.0, -70.0, -70.0], [360.0, 90.0, 360.0, 145.0, 360.0, 70.0, 70.0]]
+      joint_soft_limit:
+        position:     [[-180.0, -86.0, -180.0, -50.0, -180.0, -90.0, -180.0], [180.0, 86.0, 180.0, 140.0, 180.0, 90.0, 180.0]]
         velocity:     [100, 100, 100, 150, 150, 150, 150]
         acceleration: [100, 100, 100, 150, 150, 150, 150]
         torque:       [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
-      joint_hard_limit:                                 # Program terminates if exceed
-        position: [[-365.0, -65.0, -365.0, -45.0, -365.0, -75.0, -75.0], [365.0, 95.0, 365.0, 150.0, 365.0, 75.0, 75.0]]
+      joint_hard_limit:
+        position: [[-180.0, -86.0, -180.0, -50.0, -180.0, -90.0, -180.0], [180.0, 86.0, 180.0, 140.0, 180.0, 90.0, 180.0]]
         velocity: [130, 130, 130, 180, 180, 180, 180]
         torque:   [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
-      joint_follow:                                     # Program terminates if exceed
+      joint_follow:
         position: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
         velocity: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
         torque:   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-      joint_jump:                                       # Saturate cmd on reach
+      joint_jump:
         position: [100, 100, 100, 150, 150, 150, 150]
         velocity: [100, 100, 100, 150, 150, 150, 150]
-        torque:   [10, 10, 10, 10, 10, 10, 10]
+        torque:   [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
       task_motion_limit:
-        linear_velocity:  [0.2, 0.2, 0.2]               # in m/s, x, y, z
-        angular_velocity: [20, 20, 20]                  # in deg/s 
+        linear_velocity:  [0.2, 0.2, 0.2]
+        angular_velocity: [20, 20, 20]
     force_control:
       gravity:
-        ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        kd: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-      joint_impedance: #Activate when torque control reach joint limit
+        ratio: [0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1]
+        kd: [0.1, 0.1, 0.1, 0.0, 0.1, 0.1, 0.1]
+      joint_impedance:
         kp: [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
         kd: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
         torque_saturation: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]

@@ -2,6 +2,7 @@
 #include "gripper_config.h"
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <cmath>
@@ -59,6 +60,9 @@ struct ControlApi::Impl {
     std::vector<std::vector<float>> max_acceleration;
     uint8_t previous_trajectory_mode = 255;
     bool previous_follow = false;
+    bool joint_target_cache_valid = false;
+    float joint_target_cache[MAX_ARM_SIZE][MAX_JOINT_SIZE]{};
+    std::array<bool, MAX_ARM_SIZE> arm_target_dirty{};
 
     // explicit Impl(const std::string& prefix) {
     //     config = loadYamlConfig(prefix + "/config.yaml");
@@ -382,7 +386,9 @@ struct ControlApi::Impl {
         // JointCmd values.
         hold_all_groups_at_current_position();
         command.need_setting_update = false;
-        return send_with_ack();
+        result = send_with_ack();
+        if (result == RetCode::SUCCESS) sync_joint_target_cache_from_command();
+        return result;
     }
 
     RetCode ensure_initialized() {
@@ -398,6 +404,103 @@ struct ControlApi::Impl {
             for (int joint = 0; joint < joint_sizes[arm]; ++joint)
                 command.JointCmd[arm][joint] = snapshot.JointPos[arm][joint];
         }
+    }
+
+    void clear_arm_target_dirty() { arm_target_dirty.fill(false); }
+
+    void sync_joint_target_cache_from_command() {
+        for (int arm = 0; arm < command.ArmSize; ++arm)
+            for (int joint = 0; joint < joint_sizes[arm]; ++joint)
+                joint_target_cache[arm][joint] = command.JointCmd[arm][joint];
+        joint_target_cache_valid = true;
+        clear_arm_target_dirty();
+    }
+
+    void sync_joint_target_cache_from_state() {
+        const PlannerState snapshot = state_snapshot();
+        for (int arm = 0; arm < command.ArmSize; ++arm)
+            for (int joint = 0; joint < joint_sizes[arm]; ++joint)
+                joint_target_cache[arm][joint] = snapshot.JointPos[arm][joint];
+        joint_target_cache_valid = true;
+        clear_arm_target_dirty();
+    }
+
+    bool ensure_joint_target_cache() {
+        if (joint_target_cache_valid) return true;
+        if (!received_state.load()) return false;
+        sync_joint_target_cache_from_state();
+        return true;
+    }
+
+    void hold_unflushed_groups_in_cache() {
+        if (!received_state.load()) return;
+        const PlannerState snapshot = state_snapshot();
+        for (int arm = 0; arm < command.ArmSize; ++arm) {
+            if (arm_target_dirty[arm]) continue;
+            for (int joint = 0; joint < joint_sizes[arm]; ++joint)
+                joint_target_cache[arm][joint] = snapshot.JointPos[arm][joint];
+        }
+    }
+
+    void apply_joint_motion_profile(bool follow, uint8_t trajectory_mode,
+                                    uint16_t radio) {
+        command.motion_type = MotionControl::kJoint;
+        command.target_type = ControlType::kPosition;
+        command.actuator_mode = ControlType::kPosition;
+        command.interpolation_speed_ratio = 1.0F;
+        command.InterpolationConstVelTime = 0.0F;
+
+        if (!follow) {
+            command.arm_target_mode = PanelTargetMode::kSinglePoint;
+            command.interpolation_type = InterpolationMethod::kQuintic;
+            command.InterpolationAccTime =
+                config["panel"]["general"]["acc_time"].as<float>();
+        } else if (trajectory_mode == 0) {
+            command.arm_target_mode = PanelTargetMode::kSinglePoint;
+            command.interpolation_type = InterpolationMethod::kDirect;
+            command.InterpolationAccTime = kMinimumProfileTime;
+        } else if (trajectory_mode == 1) {
+            command.arm_target_mode = PanelTargetMode::kSinglePoint;
+            command.interpolation_type = InterpolationMethod::kQuintic;
+            command.InterpolationAccTime = curve_fit_time(radio);
+        } else {
+            command.arm_target_mode = PanelTargetMode::kRawSinglePoint;
+            command.interpolation_type = InterpolationMethod::kNone;
+            command.NoneInterpolationSaturationRatio = filter_cutoff_frequency(radio);
+            command.InterpolationAccTime = 0.0F;
+        }
+
+        command.reset_interpolation =
+            previous_follow != follow || previous_trajectory_mode != trajectory_mode;
+    }
+
+    RetCode send_cached_joint_command(bool follow, uint8_t trajectory_mode,
+                                      uint16_t radio) {
+        if (!ensure_joint_target_cache()) return RetCode::RECEIVE_FAILED;
+        if (follow && (trajectory_mode > 2 ||
+                       (trajectory_mode == 1 && radio > 100) ||
+                       (trajectory_mode == 2 && radio > 999)))
+            return RetCode::CONTROLLER_ERROR;
+
+        hold_unflushed_groups_in_cache();
+        apply_joint_motion_profile(follow, trajectory_mode, radio);
+        for (int arm = 0; arm < command.ArmSize; ++arm)
+            for (int joint = 0; joint < joint_sizes[arm]; ++joint)
+                command.JointCmd[arm][joint] = joint_target_cache[arm][joint];
+
+        synchronize_sequence_with_planner();
+        const uint32_t sequence = command.sequence_id;
+        const uint64_t generation_before_send = state_generation.load();
+        if (!send_once()) return RetCode::SEND_FAILED;
+        command.reset_interpolation = false;
+        previous_follow = follow;
+        previous_trajectory_mode = trajectory_mode;
+        clear_arm_target_dirty();
+
+        if (follow) return RetCode::SUCCESS;
+        return wait_for_ack(sequence, generation_before_send)
+                   ? RetCode::SUCCESS
+                   : RetCode::TIMEOUT;
     }
 };
 
@@ -444,36 +547,7 @@ RetCode ControlApi::move_joint(Group group, const std::vector<float>& joints,
         return RetCode::CONTROLLER_ERROR;
     if (!impl_->received_state.load()) return RetCode::RECEIVE_FAILED;
 
-    impl_->command.motion_type = MotionControl::kJoint;
-    impl_->command.target_type = ControlType::kPosition;
-    impl_->command.actuator_mode = ControlType::kPosition;
-    impl_->command.interpolation_speed_ratio = 1.0F;
-    impl_->command.InterpolationConstVelTime = 0.0F;
-
-    if (!follow) {
-        impl_->command.arm_target_mode = PanelTargetMode::kSinglePoint;
-        impl_->command.interpolation_type = InterpolationMethod::kQuintic;
-        impl_->command.InterpolationAccTime =
-            impl_->config["panel"]["general"]["acc_time"].as<float>();
-    } else if (trajectory_mode == 0) {
-        impl_->command.arm_target_mode = PanelTargetMode::kSinglePoint;
-        impl_->command.interpolation_type = InterpolationMethod::kDirect;
-        impl_->command.InterpolationAccTime = kMinimumProfileTime;
-    } else if (trajectory_mode == 1) {
-        impl_->command.arm_target_mode = PanelTargetMode::kSinglePoint;
-        impl_->command.interpolation_type = InterpolationMethod::kQuintic;
-        impl_->command.InterpolationAccTime = curve_fit_time(radio);
-    } else {
-        impl_->command.arm_target_mode = PanelTargetMode::kRawSinglePoint;
-        impl_->command.interpolation_type = InterpolationMethod::kNone;
-        // In filter mode this legacy wire field carries cutoff frequency in Hz.
-        impl_->command.NoneInterpolationSaturationRatio = filter_cutoff_frequency(radio);
-        // Disable the additional time-to-target clamp; velocity limiting remains active.
-        impl_->command.InterpolationAccTime = 0.0F;
-    }
-
-    impl_->command.reset_interpolation =
-        impl_->previous_follow != follow || impl_->previous_trajectory_mode != trajectory_mode;
+    impl_->apply_joint_motion_profile(follow, trajectory_mode, radio);
     impl_->hold_unselected_groups(indices);
     size_t source = 0;
     for (int arm : indices)
@@ -487,12 +561,42 @@ RetCode ControlApi::move_joint(Group group, const std::vector<float>& joints,
     impl_->command.reset_interpolation = false;
     impl_->previous_follow = follow;
     impl_->previous_trajectory_mode = trajectory_mode;
+    impl_->sync_joint_target_cache_from_command();
 
     // High-follow calls must remain non-blocking so the caller can maintain <=10 ms cadence.
     if (follow) return RetCode::SUCCESS;
     return impl_->wait_for_ack(sequence, generation_before_send)
                ? RetCode::SUCCESS
                : RetCode::TIMEOUT;
+}
+
+RetCode ControlApi::set_joint_target(Group group,
+                                     const std::vector<float>& joints) {
+    std::lock_guard<std::mutex> lock(impl_->command_mutex);
+    const auto indices = impl_->group_indices(group);
+    if (indices.empty() || joints.size() != impl_->expected_joint_count(group))
+        return RetCode::CONTROLLER_ERROR;
+    if (!impl_->ensure_joint_target_cache()) return RetCode::RECEIVE_FAILED;
+
+    size_t source = 0;
+    for (int arm : indices) {
+        impl_->arm_target_dirty[arm] = true;
+        for (int joint = 0; joint < impl_->joint_sizes[arm]; ++joint)
+            impl_->joint_target_cache[arm][joint] = joints[source++];
+    }
+    return RetCode::SUCCESS;
+}
+
+RetCode ControlApi::flush_joint_command(bool follow, uint8_t trajectory_mode,
+                                        uint16_t radio) {
+    std::lock_guard<std::mutex> lock(impl_->command_mutex);
+    return impl_->send_cached_joint_command(follow, trajectory_mode, radio);
+}
+
+void ControlApi::reset_joint_target_cache() {
+    std::lock_guard<std::mutex> lock(impl_->command_mutex);
+    impl_->joint_target_cache_valid = false;
+    impl_->clear_arm_target_dirty();
 }
 
 std::tuple<RetCode, std::vector<float>> ControlApi::get_joint(Group group) const {

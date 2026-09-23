@@ -1,0 +1,16 @@
+name: gripperL
+type: UartServoTwoFingerGripper
+joint_size: 1
+urdf_joints: ["gripper_J1_l"]
+urdf_links: ["gripper_L1_l", "gripper_L2_l"]
+panel_display_joint_names: ["L_gripper"]
+offset_from_ee: [0.10, 0, 0]
+hardware:
+  com_id: "/dev/ttyUSB0"
+  servo_id: 2
+  servo_limit: [450, 3000]
+safety:
+  joint_soft_limit: 
+    position: [[0], [1]]
+  joint_hard_limit:
+    position: [[0], [1]]

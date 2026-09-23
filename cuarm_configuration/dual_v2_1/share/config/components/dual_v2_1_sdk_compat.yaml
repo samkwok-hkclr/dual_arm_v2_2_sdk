@@ -1,0 +1,151 @@
+base:
+  urdf_joints: []
+  urdf_links: ["dummy_world", "DP", "s1", "s2", "s3", "s4"]
+arm:
+  - name: armL
+    type: DualV2Arm
+    joint_size: 7
+    urdf_joints: ["arm_J1_l", "arm_J2_l", "arm_J3_l", "arm_J4_l", "arm_J5_l", "arm_J6_l", "arm_J7_l"]
+    urdf_links: ["arm_L1_l", "arm_L2_l", "arm_L3_l", "arm_L4_l", "arm_L5_l", "arm_L6_l", "arm_L7_l", "arm_end_effector_l"]
+    enable_joint: [true, true, true, true, true, true, true]
+    pid:
+      pos_vel_kp: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0]
+      pos_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      vel_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      pos_vel_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      pos_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      vel_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    safety:
+      joint_soft_limit:
+        position:     [[-360.0, -60.0, -360.0, -40.0, -360.0, -70.0, -70.0], [360.0, 90.0, 360.0, 145.0, 360.0, 70.0, 70.0]]
+        velocity:     [100, 100, 100, 150, 150, 150, 150]
+        acceleration: [100, 100, 100, 150, 150, 150, 150]
+        torque:       [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+      joint_hard_limit:
+        position: [[-365.0, -65.0, -365.0, -45.0, -365.0, -75.0, -75.0], [365.0, 95.0, 365.0, 150.0, 365.0, 75.0, 75.0]]
+        velocity: [130, 130, 130, 180, 180, 180, 180]
+        torque:   [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+      joint_follow:
+        position: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        velocity: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        torque:   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+      joint_jump:
+        position: [100, 100, 100, 150, 150, 150, 150]
+        velocity: [100, 100, 100, 150, 150, 150, 150]
+        torque:   [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+      task_motion_limit:
+        linear_velocity:  [0.2, 0.2, 0.2]
+        angular_velocity: [20, 20, 20]
+    force_control:
+      gravity:
+        ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        kd: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+      joint_impedance:
+        kp: [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+        kd: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        torque_saturation: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]
+      velocity_low_pass_filter_ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      friction:
+        coulumb_with_viscous:
+          ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          coulumb: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          viscous: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    use_joint_torque_sensor: false
+  - name: head
+    type: DualV2Arm
+    joint_size: 2
+    urdf_joints: ["H1j", "H2j"]
+    urdf_links: ["H1", "H2"]
+    enable_joint: [false, false]
+    pid:
+      pos_vel_kp: [3.0, 3.0]
+      pos_tor_kp: [0.0, 0.0]
+      vel_tor_kp: [0.0, 0.0]
+      pos_vel_kd: [0.0, 0.0]
+      pos_tor_kd: [0.0, 0.0]
+      vel_tor_kd: [0.0, 0.0]
+    safety:
+      joint_soft_limit:
+        position:     [[-175.0, -70.0], [175.0, 70.0]]
+        velocity:     [60, 60]
+        acceleration: [60, 60]
+        torque:       [1.6, 1.6]
+      joint_hard_limit:
+        position: [[-180.0, -75.0], [180.0, 75.0]]
+        velocity: [80, 80]
+        torque:   [10.0, 10.0]
+      joint_follow:
+        position: [5.0, 5.0]
+        velocity: [5.0, 5.0]
+        torque:   [0.5, 0.5]
+      joint_jump:
+        position: [60, 60]
+        velocity: [60, 60]
+        torque:   [1.6, 1.6]
+      task_motion_limit:
+        linear_velocity:  [0.2, 0.2, 0.2]
+        angular_velocity: [20, 20, 20]
+    force_control:
+      gravity:
+        ratio: [0.0, 0.0]
+        kd: [0.1, 0.1]
+      joint_impedance:
+        kp: [50.0, 50.0]
+        kd: [5.0, 5.0]
+        torque_saturation: [1.5, 1.5]
+      velocity_low_pass_filter_ratio: [0.0, 0.0]
+      friction:
+        coulumb_with_viscous:
+          ratio: [0.0, 0.0]
+          coulumb: [0.0, 0.0]
+          viscous: [0.0, 0.0]
+    use_joint_torque_sensor: false
+  - name: armR
+    type: DualV2Arm
+    joint_size: 7
+    urdf_joints: ["arm_J1_r", "arm_J2_r", "arm_J3_r", "arm_J4_r", "arm_J5_r", "arm_J6_r", "arm_J7_r"]
+    urdf_links: ["arm_L1_r", "arm_L2_r", "arm_L3_r", "arm_L4_r", "arm_L5_r", "arm_L6_r", "arm_L7_r", "arm_end_effector_r"]
+    enable_joint: [true, true, true, true, true, true, true]
+    pid:
+      pos_vel_kp: [3.0, 3.0, 10.0, 3.0, 3.0, 3.0, 3.0]
+      pos_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      vel_tor_kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      pos_vel_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      pos_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      vel_tor_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    safety:
+      joint_soft_limit:
+        position:     [[-360.0, -60.0, -360.0, -40.0, -360.0, -70.0, -70.0], [360.0, 90.0, 360.0, 145.0, 360.0, 70.0, 70.0]]
+        velocity:     [100, 100, 100, 150, 150, 150, 150]
+        acceleration: [100, 100, 100, 150, 150, 150, 150]
+        torque:       [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+      joint_hard_limit:
+        position: [[-365.0, -65.0, -365.0, -45.0, -365.0, -75.0, -75.0], [365.0, 95.0, 365.0, 150.0, 365.0, 75.0, 75.0]]
+        velocity: [130, 130, 130, 180, 180, 180, 180]
+        torque:   [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+      joint_follow:
+        position: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        velocity: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        torque:   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+      joint_jump:
+        position: [100, 100, 100, 150, 150, 150, 150]
+        velocity: [100, 100, 100, 150, 150, 150, 150]
+        torque:   [10, 10, 10, 10, 10, 10, 10]
+      task_motion_limit:
+        linear_velocity:  [0.2, 0.2, 0.2]
+        angular_velocity: [20, 20, 20]
+    force_control:
+      gravity:
+        ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        kd: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+      joint_impedance:
+        kp: [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+        kd: [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+        torque_saturation: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]
+      velocity_low_pass_filter_ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      friction:
+        coulumb_with_viscous:
+          ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          coulumb: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          viscous: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    use_joint_torque_sensor: false

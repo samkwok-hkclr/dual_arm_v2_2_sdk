@@ -1,0 +1,14 @@
+name: handR
+type: InspireDexterousHand
+joint_size: 6
+urdf_joints: ["hand_J1_r", "hand_J2_r", "hand_J3_r", "hand_J4_r", "hand_J5_r", "hand_J6_r"]
+urdf_links: [
+  R_thumb_proximal, R_thumb_intermediate, R_thumb_distal, R_index_proximal, R_index_distal,
+  R_middle_proximal, R_middle_distal, R_ring_proximal, R_ring_distal, R_pinky_proximal, R_pinky_distal]
+panel_display_joint_names: [R_thumbRotate, R_thumbFlex, R_indexFlex, R_middleFlex, R_ringFlex, R_littleFlex]
+offset_from_ee: [0.155, 0.04, 0.0]
+safety:
+  joint_soft_limit: 
+    position: [[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]
+  joint_hard_limit:
+    position: [[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]

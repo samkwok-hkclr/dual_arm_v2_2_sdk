@@ -1,0 +1,3 @@
+name: dual_v2_1_sdk_compat
+urdf: share/sdk_compat/dual_arm.urdf
+import_yaml: share/config/components/dual_v2_1_sdk_compat.yaml

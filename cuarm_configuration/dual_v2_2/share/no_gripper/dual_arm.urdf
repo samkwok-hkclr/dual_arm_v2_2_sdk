@@ -7,159 +7,217 @@
   <mujoco>
     <compiler balanceinertia="true" discardvisual="false" meshdir="meshes/visual/"/>
   </mujoco>
+  <!-- V2 Waist and head -->
+  <link name="S0">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.00775211740335344 0.0132658299932028 -0.166173393733732"/>
+      <mass value="68.8751085446278"/>
+      <inertia ixx="0.421277188651375" ixy="-0.0984581966349385" ixz="-0.000567810771211918" iyy="0.613622151667476" iyz="-0.00366337744192757" izz="0.915324765398917"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S0.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S0.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="S1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.204852736202403 5.59509607745161E-06 0.0101052983100704"/>
+      <mass value="8.59759690292358"/>
+      <inertia ixx="0.0104990174186969" ixy="1.36186415214932E-05" ixz="3.92976706746001E-06" iyy="0.0603355540758751" iyz="-1.1418137579805E-06" izz="0.0655105144203907"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S1.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S1.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="S1j" type="revolute">
+    <origin rpy="-1.5708     -1.5708     0.000000000" xyz="0.000000000 0.000000000 0.000000000"/>
+    <parent link="S0"/>
+    <child link="S1"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <link name="S2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.146750800431702 -0.000102394712500605 0.0369695830679559"/>
+      <mass value="5.22090662821691"/>
+      <inertia ixx="0.00589963800443405" ixy="-3.56849066351916E-08" ixz="0.000115714335724619" iyy="0.0669003280937632" iyz="-1.21347704617029E-07" izz="0.0719163151273267"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S2.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S2.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="S2j" type="revolute">
+    <origin rpy=" 0.000000000  0.000000000  0.000000000" xyz=" 0.3          0.000000000  0.000000000"/>
+    <parent link="S1"/>
+    <child link="S2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <link name="S3">
+    <inertial>
+      <origin rpy="0 0 0" xyz="2.40768963831646E-06 -0.0181677491873271 -0.0060945644555344"/>
+      <mass value="4.78694804166376"/>
+      <inertia ixx="0.0110635723686587" ixy="1.08920286987205E-06" ixz="9.74965082590477E-08" iyy="0.00770020436061314" iyz="-0.000632404967314379" izz="0.0126428105168128"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.004"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S3.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.004"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S3.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="S3j" type="revolute">
+    <origin rpy=" 0.000000000  0.000000000  1.5708    " xyz=" 0.3          0.000000000  -0.004     "/>
+    <parent link="S2"/>
+    <child link="S3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <link name="S4">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00080795 0.0001356 0.17121"/>
+      <mass value="12.776"/>
+      <inertia ixx="0.12559" ixy="-7.8232E-06" ixz="0.0028196" iyy="0.10161" iyz="-1.0089E-06" izz="0.040222"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S4.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/S4.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="S4j" type="revolute">
+    <origin rpy=" 1.5708      0.000000000  0.000000000" xyz=" 0.000000000  -0.1844      0.000000000"/>
+    <parent link="S3"/>
+    <child link="S4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <link name="H1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00172882376935018 0.000417887463804602 -0.0979992740802513"/>
+      <mass value="0.416514798250936"/>
+      <inertia ixx="0.000261804781565193" ixy="-1.93441453133377E-07" ixz="8.00399316303601E-06" iyy="0.000248469677978548" iyz="-2.27389444525046E-07" izz="0.000221150425147204"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/H1.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/H1.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="H1j" type="revolute">
+    <origin rpy=" 0.000000000  0.000000000  0.000000000" xyz=" -0.0215      0.000000000  0.5581     "/>
+    <parent link="S4"/>
+    <child link="H1"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
+  <link name="H2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0386056182886735 -0.0102828801975141 0.00091637143016793"/>
+      <mass value="0.2515794715362"/>
+      <inertia ixx="0.00112393743584269" ixy="8.55963174255124E-06" ixz="-1.08113699950406E-06" iyy="0.000623657626489795" iyz="-1.4182825444934E-07" izz="0.000728070671150008"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/H2.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/H2.STL"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="H2j" type="revolute">
+    <origin rpy=" -1.5708      0.000000000  0.000000000" xyz=" 0.000000000  0.000000000  0.000000000"/>
+    <parent link="H1"/>
+    <child link="H2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="0" lower="0" upper="0" velocity="0"/>
+  </joint>
   <link name="dummy_world"/>
   <joint name="w0" type="fixed">
-    <origin rpy="0.0 0.0 3.14159" xyz="0.0 0.0 0.0"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.3040"/>
     <parent link="dummy_world"/>
-    <child link="DP"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" lower="0" upper="0" velocity="0"/>
-  </joint>
-  <!-- V2 Waist Structure: DP to s4 -->
-  <link name="DP">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0.0120762037678243 -0.0119954938742637 0.127090040942829"/>
-      <mass value="44.1605811975989"/>
-      <inertia ixx="0.312751937537749" ixy="-0.0606803834170765" ixz="0.000113964813907761" iyy="0.356800155698396" iyz="0.00110337529407953" izz="0.608747743567384"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="-0.17 -0.0095272563278727 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/DP.STL"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/DP.STL"/>
-      </geometry>
-    </collision>
-  </link>
-  <link name="s1">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0.226034759482347 0.0089178389580318 -0.0155588345793732"/>
-      <mass value="7.33861438888969"/>
-      <inertia ixx="0.00728831359742297" ixy="-0.00190883437599297" ixz="-0.000885194483134077" iyy="0.0556091600309597" iyz="-3.75108603689293E-05" izz="0.0592479716400448"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 -1.59" xyz="0 0 0.00785"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s1.STL"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s1.STL"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="s1j" type="fixed">
-    <origin rpy="-1.5707963267949 0.0 0.0" xyz="0.0 0.0 0.191"/>
-    <parent link="DP"/>
-    <child link="s1"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" lower="0" upper="0" velocity="0"/>
-  </joint>
-  <link name="s2">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0.135013083932529 -0.029106780334011 -0.0313419787724153"/>
-      <mass value="3.4665387085359"/>
-      <inertia ixx="0.00425349257667328" ixy="0.0092587742907856" ixz="-3.12665418859238E-05" iyy="0.0450515456854223" iyz="6.75586001794495E-06" izz="0.0486889243882853"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 -1.35" xyz="0 0 0.00785"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s2.STL"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s2.STL"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="s2j" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0 -0.32475 0.0"/>
-    <parent link="s1"/>
-    <child link="s2"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" lower="0" upper="0" velocity="0"/>
-  </joint>
-  <link name="s3">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0.00452485089660748 -0.0258009971448284 -0.0115991250507664"/>
-      <mass value="3.0631585448688"/>
-      <inertia ixx="0.00690131033425852" ixy="0.000401191816314391" ixz="-3.57066611643954E-05" iyy="0.00467232431413507" iyz="0.000203585399127" izz="0.00704139048908576"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 -0.2123" xyz="0 0 0.00785"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s3.STL"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s3.STL"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="s3j" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0 -0.31765 0.0"/>
-    <parent link="s2"/>
-    <child link="s3"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" lower="0" upper="0" velocity="0"/>
-  </joint>
-  <link name="s4">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0.00629908978173603 0.01315393690424 -0.129363527706989"/>
-      <mass value="7.92042850162327"/>
-      <inertia ixx="0.0779176752134302" ixy="1.04503605777624E-05" ixz="0.00159914726181089" iyy="0.065233911692971" iyz="2.70837690156867E-05" izz="0.023015224604043"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="-0.0155 0.0 -0.01521"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s4.STL"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/base/s4.STL"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="s4j" type="fixed">
-    <origin rpy="1.5707963267949 3.14159 0.0" xyz="0.0 -0.58654 0.0"/>
-    <parent link="s3"/>
-    <child link="s4"/>
+    <child link="S0"/>
     <axis xyz="0 0 1"/>
     <limit effort="0" lower="0" upper="0" velocity="0"/>
   </joint>
   <link name="arm_base_link_l"/>
   <link name="arm_L1_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="-2.6332E-05 0.0078457 -0.015019"/>
-      <mass value="1.8018"/>
-      <inertia ixx="0.0012538" ixy="-1.9832E-06" ixz="-5.2635E-07" iyy="0.0012637" iyz="-2.912E-05" izz="0.0012962"/>
+      <origin rpy="0 0 0" xyz="-0.00026247 0.010964 0.00022178"/>
+      <mass value="1.7675"/>
+      <inertia ixx="0.0010132" ixy="-1.4286E-05" ixz="-7.4799E-06" iyy="0.0013707" iyz="1.1578E-05" izz="0.0010066"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -172,7 +230,7 @@
     </visual>
   </link>
   <joint name="arm_J1_l" type="revolute">
-    <origin rpy="-1.57079632 0.000000000 0.000000000" xyz="0.000000000 0.209       0.000000000"/>
+    <origin rpy="-1.57079632 0.000000000 0.000000000" xyz="0.000000000 0.211       0.000000000"/>
     <parent link="arm_base_link_l"/>
     <child link="arm_L1_l"/>
     <axis xyz="0 0 1"/>
@@ -180,9 +238,9 @@
   </joint>
   <link name="arm_L2_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.0016268 -0.018491 0.013617"/>
-      <mass value="0.72275"/>
-      <inertia ixx="0.0010152" ixy="-1.8398E-06" ixz="-5.0002E-06" iyy="0.0010859" iyz="-3.0902E-05" izz="0.00075346"/>
+      <origin rpy="0 0 0" xyz="5.6439E-05 -0.031609 0.0051039"/>
+      <mass value="0.38586"/>
+      <inertia ixx="0.00088362" ixy="4.1023E-07" ixz="-3.0483E-08" iyy="0.00091573" iyz="-3.0679E-05" izz="0.00049798"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -203,12 +261,12 @@
   </joint>
   <link name="arm_L3_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0024833 0.00098393 -0.14507"/>
-      <mass value="1.7397"/>
-      <inertia ixx="0.0029329" ixy="-4.7858E-05" ixz="-0.00014667" iyy="0.0026929" iyz="-6.8741E-05" izz="0.001581"/>
+      <origin rpy="0 0 0" xyz="0.0023775 0.0011528 -0.17661"/>
+      <mass value="1.7244"/>
+      <inertia ixx="0.0039266" ixy="-4.9212E-05" ixz="-0.00016045" iyy="0.0036874" iyz="-7.9299E-05" izz="0.0015653"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 -0.01009"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/arm/z3.STL"/>
       </geometry>
@@ -218,7 +276,7 @@
     </visual>
   </link>
   <joint name="arm_J3_l" type="revolute">
-    <origin rpy=" 1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  -0.310       0.000000000"/>
+    <origin rpy=" 1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  -0.34955     0.000000000"/>
     <parent link="arm_L2_l"/>
     <child link="arm_L3_l"/>
     <axis xyz="0 0 1"/>
@@ -226,9 +284,9 @@
   </joint>
   <link name="arm_L4_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="-7.9619E-05 -0.020908 -0.0083927"/>
-      <mass value="1.299"/>
-      <inertia ixx="0.0023679" ixy="1.4104E-06" ixz="3.2641E-06" iyy="0.00077203" iyz="-1.4195E-05" izz="0.0023085"/>
+      <origin rpy="0 0 0" xyz="-7.5341E-05 -0.031001 -0.0080951"/>
+      <mass value="1.371"/>
+      <inertia ixx="0.0036474" ixy="1.4924E-06" ixz="3.2573E-06" iyy="0.00082776" iyz="-1.6446E-05" izz="0.0035754"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -241,7 +299,7 @@
     </visual>
   </link>
   <joint name="arm_J4_l" type="revolute">
-    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.039        0.000000000  0.000000000"/>
+    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.038567     0.000000000  0.000000000"/>
     <parent link="arm_L3_l"/>
     <child link="arm_L4_l"/>
     <axis xyz="0 0 1"/>
@@ -249,12 +307,12 @@
   </joint>
   <link name="arm_L5_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.00018457 0.00085009 -0.091635"/>
-      <mass value="0.94391"/>
-      <inertia ixx="0.00092687" ixy="-2.6064E-05" ixz="-8.0668E-06" iyy="0.0008162" iyz="-3.7952E-05" izz="0.00057299"/>
+      <origin rpy="0 0 0" xyz="3.1051E-05 0.0001351 -0.086237"/>
+      <mass value="1.0029"/>
+      <inertia ixx="0.00094364" ixy="-7.0959E-08" ixz="-4.1964E-07" iyy="0.00083252" iyz="3.8909E-05" izz="0.00058448"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0.235" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/arm/z5.STL"/>
       </geometry>
@@ -264,7 +322,7 @@
     </visual>
   </link>
   <joint name="arm_J5_l" type="revolute">
-    <origin rpy=" 1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  -0.310       0.000000000"/>
+    <origin rpy=" 1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  -0.352       0.000000000"/>
     <parent link="arm_L4_l"/>
     <child link="arm_L5_l"/>
     <axis xyz="0 0 1"/>
@@ -272,9 +330,9 @@
   </joint>
   <link name="arm_L6_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0079943 -0.0010961 0.008028"/>
-      <mass value="0.87461"/>
-      <inertia ixx="0.00048244" ixy="2.7861E-05" ixz="-1.1648E-05" iyy="0.00051927" iyz="2.1294E-07" izz="0.00065595"/>
+      <origin rpy="0 0 0" xyz="-2.40187764325855E-05 -0.0103113089150794 -0.00881784364749045"/>
+      <mass value="0.831539795358367"/>
+      <inertia ixx="0.000655700282508314" ixy="-9.94477485601248E-08" ixz="-1.13406853852821E-08" iyy="0.000343386952877992" iyz="-8.10638688560648E-06" izz="0.000646147233297348"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -287,7 +345,7 @@
     </visual>
   </link>
   <joint name="arm_J6_l" type="revolute">
-    <origin rpy=" -1.57079632  -1.57079632  0.000000000" xyz=" 0.000000000  0.000000000  0.000000000"/>
+    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  0.000000000  0.000000000"/>
     <parent link="arm_L5_l"/>
     <child link="arm_L6_l"/>
     <axis xyz="0 0 1"/>
@@ -295,9 +353,9 @@
   </joint>
   <link name="arm_L7_l">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0011802 -0.00034388 0.0092491"/>
-      <mass value="0.75543"/>
-      <inertia ixx="0.00026932" ixy="6.312E-06" ixz="-7.6342E-08" iyy="0.00028918" iyz="1.4781E-08" izz="0.00029735"/>
+      <origin rpy="0 0 0" xyz="0.0014199 -8.3116E-05 -0.031317"/>
+      <mass value="0.45531"/>
+      <inertia ixx="0.00012081" ixy="-1.9587E-07" ixz="-4.0084E-09" iyy="0.00012092" iyz="-4.2026E-07" izz="0.00014782"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -310,30 +368,30 @@
     </visual>
   </link>
   <joint name="arm_J7_l" type="revolute">
-    <origin rpy=" 1.57079632   0.000000000  0.000000000" xyz=" 0.067        0.000000000  0.000000000"/>
+    <origin rpy=" 1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  -0.11  0.000000000"/>
     <parent link="arm_L6_l"/>
     <child link="arm_L7_l"/>
     <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-1.22173" upper="1.22173" velocity="5.0"/>
+    <limit effort="100" lower="-6.28319" upper="6.28319" velocity="5.0"/>
   </joint>
   <link name="arm_end_effector_l">
 		</link>
   <joint name="arm_J8_l" type="fixed">
-    <origin rpy="0 0 0" xyz="0.045 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="arm_L7_l"/>
     <child link="arm_end_effector_l"/>
   </joint>
   <joint name="J0_l" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="s4"/>
+    <origin rpy="0 0 0" xyz="-0.008 0 0.3299"/>
+    <parent link="S4"/>
     <child link="arm_base_link_l"/>
   </joint>
   <link name="arm_base_link_r"/>
   <link name="arm_L1_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="-2.6332E-05 0.0078457 -0.015019"/>
-      <mass value="1.8018"/>
-      <inertia ixx="0.0012538" ixy="-1.9832E-06" ixz="-5.2635E-07" iyy="0.0012637" iyz="-2.912E-05" izz="0.0012962"/>
+      <origin rpy="0 0 0" xyz="-0.00026247 -0.010964 -0.00022178"/>
+      <mass value="1.7675"/>
+      <inertia ixx="0.0010132" ixy="1.4286E-05" ixz="7.4799E-06" iyy="0.0013707" iyz="1.1578E-05" izz="0.0010066"/>
     </inertial>
     <visual>
       <origin rpy="0 3.14159 0" xyz="0 0 0"/>
@@ -346,7 +404,7 @@
     </visual>
   </link>
   <joint name="arm_J1_r" type="revolute">
-    <origin rpy="-1.57079632 0.000000000 0.000000000" xyz="0.000000000 -0.209      0.000000000"/>
+    <origin rpy="-1.57079632 0.000000000 0.000000000" xyz="0.000000000 -0.211      0.000000000"/>
     <parent link="arm_base_link_r"/>
     <child link="arm_L1_r"/>
     <axis xyz="0 0 1"/>
@@ -354,9 +412,9 @@
   </joint>
   <link name="arm_L2_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.0016268 -0.018491 0.013617"/>
-      <mass value="0.72275"/>
-      <inertia ixx="0.0010152" ixy="-1.8398E-06" ixz="-5.0002E-06" iyy="0.0010859" iyz="-3.0902E-05" izz="0.00075346"/>
+      <origin rpy="0 0 0" xyz="5.6439E-05 -0.031609 0.0051039"/>
+      <mass value="0.38586"/>
+      <inertia ixx="0.00088362" ixy="4.1023E-07" ixz="-3.0483E-08" iyy="0.00091573" iyz="-3.0679E-05" izz="0.00049798"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -377,12 +435,12 @@
   </joint>
   <link name="arm_L3_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0024833 0.00098393 -0.14507"/>
-      <mass value="1.7397"/>
-      <inertia ixx="0.0029329" ixy="-4.7858E-05" ixz="-0.00014667" iyy="0.0026929" iyz="-6.8741E-05" izz="0.001581"/>
+      <origin rpy="0 0 0" xyz="0.0023775 -0.0011528 0.17661"/>
+      <mass value="1.7244"/>
+      <inertia ixx="0.0039266" ixy="4.9212E-05" ixz="0.00016045" iyy="0.0036874" iyz="-7.9299E-05" izz="0.0015653"/>
     </inertial>
     <visual>
-      <origin rpy="0 3.14159 3.14159" xyz="0 0 0.01009"/>
+      <origin rpy="0 3.14159 3.14159" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/arm/z3.STL"/>
       </geometry>
@@ -392,7 +450,7 @@
     </visual>
   </link>
   <joint name="arm_J3_r" type="revolute">
-    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  -0.310       0.000000000"/>
+    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  -0.34955     0.000000000"/>
     <parent link="arm_L2_r"/>
     <child link="arm_L3_r"/>
     <axis xyz="0 0 1"/>
@@ -400,9 +458,9 @@
   </joint>
   <link name="arm_L4_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="-7.9619E-05 -0.020908 -0.0083927"/>
-      <mass value="1.299"/>
-      <inertia ixx="0.0023679" ixy="1.4104E-06" ixz="3.2641E-06" iyy="0.00077203" iyz="-1.4195E-05" izz="0.0023085"/>
+      <origin rpy="0 0 0" xyz="-7.5341E-05 -0.031001 -0.0080951"/>
+      <mass value="1.371"/>
+      <inertia ixx="0.0036474" ixy="1.4924E-06" ixz="3.2573E-06" iyy="0.00082776" iyz="-1.6446E-05" izz="0.0035754"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -415,7 +473,7 @@
     </visual>
   </link>
   <joint name="arm_J4_r" type="revolute">
-    <origin rpy=" 1.57079632  0.000000000  0.000000000" xyz=" 0.039        0.000000000  0.000000000"/>
+    <origin rpy=" 1.57079632  0.000000000  0.000000000" xyz=" 0.038567     0.000000000  0.000000000"/>
     <parent link="arm_L3_r"/>
     <child link="arm_L4_r"/>
     <axis xyz="0 0 1"/>
@@ -423,12 +481,12 @@
   </joint>
   <link name="arm_L5_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.00018457 0.00085009 -0.091635"/>
-      <mass value="0.94391"/>
-      <inertia ixx="0.00092687" ixy="-2.6064E-05" ixz="-8.0668E-06" iyy="0.0008162" iyz="-3.7952E-05" izz="0.00057299"/>
+      <origin rpy="0 0 0" xyz="3.1051E-05 -0.0001351 0.086237"/>
+      <mass value="1.0029"/>
+      <inertia ixx="0.00094364" ixy="7.0959E-08" ixz="4.1964E-07" iyy="0.00083252" iyz="3.8909E-05" izz="0.00058448"/>
     </inertial>
     <visual>
-      <origin rpy="0 3.14159 -0.235" xyz="0 0 0"/>
+      <origin rpy="0 3.14159 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/arm/z5.STL"/>
       </geometry>
@@ -438,7 +496,7 @@
     </visual>
   </link>
   <joint name="arm_J5_r" type="revolute">
-    <origin rpy=" -1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  -0.310       0.000000000"/>
+    <origin rpy=" -1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  -0.352       0.000000000"/>
     <parent link="arm_L4_r"/>
     <child link="arm_L5_r"/>
     <axis xyz="0 0 1"/>
@@ -446,9 +504,9 @@
   </joint>
   <link name="arm_L6_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0079943 -0.0010961 0.008028"/>
-      <mass value="0.87461"/>
-      <inertia ixx="0.00048244" ixy="2.7861E-05" ixz="-1.1648E-05" iyy="0.00051927" iyz="2.1294E-07" izz="0.00065595"/>
+      <origin rpy="0 0 0" xyz="-2.4019E-05 -0.010311 -0.0088178"/>
+      <mass value="0.83154"/>
+      <inertia ixx="0.0006557" ixy="-9.9447E-08" ixz="-1.134E-08" iyy="0.00034339" iyz="-8.1064E-06" izz="0.00064615"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -461,7 +519,7 @@
     </visual>
   </link>
   <joint name="arm_J6_r" type="revolute">
-    <origin rpy=" 1.57079632   1.57079632   0.000000000" xyz=" 0.000000000  0.000000000  0.000000000"/>
+    <origin rpy=" 1.57079632   0.000000000  0.000000000" xyz=" 0.000000000  0.000000000  0.000000000"/>
     <parent link="arm_L5_r"/>
     <child link="arm_L6_r"/>
     <axis xyz="0 0 1"/>
@@ -469,12 +527,12 @@
   </joint>
   <link name="arm_L7_r">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.0011802 -0.00034388 0.0092491"/>
-      <mass value="0.75543"/>
-      <inertia ixx="0.00026932" ixy="6.312E-06" ixz="-7.6342E-08" iyy="0.00028918" iyz="1.4781E-08" izz="0.00029735"/>
+      <origin rpy="0 0 0" xyz="0.0014199 8.3116E-05 0.031317"/>
+      <mass value="0.45531"/>
+      <inertia ixx="0.00012081" ixy="1.9587E-07" ixz="4.0084E-09" iyy="0.00012092" iyz="-4.2026E-07" izz="0.00014782"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="3.141592653 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://cuarm_mesh/dual_v2_2/meshes/arm/z7.STL"/>
       </geometry>
@@ -484,22 +542,22 @@
     </visual>
   </link>
   <joint name="arm_J7_r" type="revolute">
-    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.067        0.000000000  0.000000000"/>
+    <origin rpy=" -1.57079632  0.000000000  0.000000000" xyz=" 0.000000000  -0.11  0.000000000"/>
     <parent link="arm_L6_r"/>
     <child link="arm_L7_r"/>
     <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-1.22173" upper="1.22173" velocity="5.0"/>
+    <limit effort="100" lower="-6.28319" upper="6.28319" velocity="5.0"/>
   </joint>
   <link name="arm_end_effector_r">
 		</link>
   <joint name="arm_J8_r" type="fixed">
-    <origin rpy="0 0 0" xyz="0.045 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="arm_L7_r"/>
     <child link="arm_end_effector_r"/>
   </joint>
   <joint name="J0_r" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="s4"/>
+    <origin rpy="0 0 0" xyz="-0.008 0 0.3299"/>
+    <parent link="S4"/>
     <child link="arm_base_link_r"/>
   </joint>
 </robot>

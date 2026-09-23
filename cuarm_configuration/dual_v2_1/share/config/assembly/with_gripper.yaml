@@ -1,0 +1,6 @@
+name: dual_v2_1_with_gripper
+urdf: share/with_gripper/dual_arm.urdf
+import_yaml: share/config/components/dual_v2_1.yaml
+gripper:
+  - import_yaml: share/config/components/gripper_left.yaml
+  - import_yaml: share/config/components/gripper_right.yaml

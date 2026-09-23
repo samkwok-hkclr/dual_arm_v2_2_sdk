@@ -47,6 +47,16 @@ public:
     RetCode move_joint(Group group, const std::vector<float>& joints,
                        bool follow = false, uint8_t trajectory_mode = 0,
                        uint16_t radio = 0);
+
+    // Coalesced dual-arm streaming: update cached targets without sending.
+    // Call set_joint_target() for each group, then flush_joint_command() once
+    // per control cycle. Groups not updated since the last flush are held at
+    // their current feedback pose when the packet is sent.
+    RetCode set_joint_target(Group group, const std::vector<float>& joints);
+    RetCode flush_joint_command(bool follow = false, uint8_t trajectory_mode = 0,
+                                uint16_t radio = 0);
+    void reset_joint_target_cache();
+
     std::tuple<RetCode, std::vector<float>> get_joint(Group group) const;
     std::tuple<RetCode, std::vector<float>> get_joint_velocity(Group group) const;
 

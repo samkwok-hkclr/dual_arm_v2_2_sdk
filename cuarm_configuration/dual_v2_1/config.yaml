@@ -1,0 +1,49 @@
+panel:
+  mainwindow_size: [1000, 900]
+  enable_ndi: false
+  dt_send: 0.011
+  dt_receive: 0.009 #Need to be faster than rt_control's sending frequency
+  ip: 127.0.0.1
+  port: 11101
+  general:
+    interpolation: Cos
+    target_type: Position
+    actuator_mode: Position
+    acc_time: 5
+    vel_time: 1
+    none_interpolation_saturation_adjust: 0.15
+  disable_display:
+    control_tab-motor_tab: true
+    control_tab-joint_tab-null_control: true
+    # control_tab-setting_tab-force_control-all: true
+    enable_joint_module: true
+  remote_page:
+    default_local_ip: 127.0.0.1
+    default_local_port: 30130
+    default_remote_ip: 127.0.0.1
+    default_remote_port: 30131
+    dt_receive: 0.018      #dt_send: in same freq as panel
+  qml:
+    transformation:
+      rotation: [0, 0, 0]
+      translation: [0, 0, 0]
+    camera:
+      field_of_view: 2.8
+      position: [30.0, 30.0, 18.0]
+      view_center: [0, 0, 1.25]
+rt_control:
+  dt_send: 0.01
+  dt_receive: 0.01 #Need to be faster than panel's sending frequency
+  ip: 127.0.0.1
+  port: 11201
+  robotics_library: pinocchio
+  hardware_simulation: true
+curobo:
+  import_yaml: curobo/no_gripper.yaml
+  # import_yaml: curobo/with_gripper.yaml
+  # import_yaml: curobo/left_hand_right_gripper.yaml
+robot:
+  import_yaml: share/config/assembly/no_gripper_sdk_compat.yaml
+  # import_yaml: share/config/assembly/no_gripper.yaml
+  # import_yaml: share/config/assembly/with_gripper.yaml
+  # import_yaml: share/config/assembly/left_hand_right_gripper.yaml

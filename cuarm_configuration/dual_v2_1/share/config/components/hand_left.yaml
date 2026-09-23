@@ -1,0 +1,14 @@
+name: gripperL
+type: InspireDexterousHand
+joint_size: 6
+urdf_joints: ["hand_J1_l", "hand_J2_l", "hand_J3_l", "hand_J4_l", "hand_J5_l", "hand_J6_l"]
+urdf_links: [
+  L_thumb_proximal, L_thumb_intermediate, L_thumb_distal, L_index_proximal, L_index_distal,
+  L_middle_proximal, L_middle_distal, L_ring_proximal, L_ring_distal, L_pinky_proximal, L_pinky_distal]
+panel_display_joint_names: [L_thumbRotate, L_thumbFlex, L_indexFlex, L_middleFlex, L_ringFlex, L_littleFlex]
+offset_from_ee: [0.155, -0.04, 0.0]
+safety:
+  joint_soft_limit: 
+    position: [[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]
+  joint_hard_limit:
+    position: [[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]
