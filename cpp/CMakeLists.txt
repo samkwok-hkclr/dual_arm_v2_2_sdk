@@ -133,7 +133,7 @@ target_compile_options(dual_arm_v2_2_control_sdk PRIVATE
 # ============================================================
 # 6. 示例程序 —— 两种模式共用
 # ============================================================
-option(BUILD_SDK_EXAMPLES "Build SDK examples" OFF)
+option(BUILD_SDK_EXAMPLES "Build SDK examples" ON)
 
 if(BUILD_SDK_EXAMPLES)
     # 顶层 examples/（cpp/ 的兄弟目录）
